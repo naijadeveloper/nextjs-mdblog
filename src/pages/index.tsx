@@ -1,16 +1,50 @@
-import Head from "next/head";
+import fs from "fs";
+import path from "path";
+import matter from "gray-matter";
+import type { post } from "@/types/post";
 
-export default function Home() {
+export async function getStaticProps() {
+  // Get all files from posts dir
+  const files = fs.readdirSync(path.join("src/posts"));
+
+  // Get slugs and frontmatter from posts
+  const posts = files.map((filename) => {
+    // Create slug
+    const slug = filename.replace(".md", "");
+
+    // Get frontmatter
+    const getMarkdownWithMeta = fs.readFileSync(
+      path.join("src/posts", filename),
+      "utf-8"
+    );
+
+    const { data: frontmatter } = matter(getMarkdownWithMeta);
+
+    return {
+      slug,
+      frontmatter,
+    };
+  });
+
+  return {
+    props: {
+      posts,
+    },
+  };
+}
+
+type homeType = {
+  posts: post[];
+};
+
+export default function Home({ posts }: homeType) {
   return (
     <>
-      <Head>
-        <title>Nextjs study</title>
-        <meta name="keywords" content="nexting, jsing, nextjs, nextjs13" />
-        <meta name="description" content="This is to practice nextjs" />
-      </Head>
-      <main className="flex min-h-screen flex-col items-center justify-between p-24">
-        <h1>Welcome to next</h1>
-      </main>
+      <section className="">
+        {posts.map((post, index) => (
+          <h1 key={index}>{post.slug}</h1>
+        ))}
+      </section>
     </>
   );
 }
