@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import type { post } from "@/types/post";
+import EachPost from "@/components/EachPost";
 
 export async function getStaticProps() {
   // Get all files from posts dir
@@ -28,7 +29,12 @@ export async function getStaticProps() {
 
   return {
     props: {
-      posts,
+      posts: posts.sort((a, b) => {
+        return (
+          Number(new Date(b.frontmatter.date)) -
+          Number(new Date(a.frontmatter.date))
+        );
+      }),
     },
   };
 }
@@ -40,9 +46,9 @@ type homeType = {
 export default function Home({ posts }: homeType) {
   return (
     <>
-      <section className="">
+      <section className="md:w-[90%] w-[95%] mx-auto grid grid-cols-[repeat(auto-fit,_minmax(300px,_1fr))] gap-6">
         {posts.map((post, index) => (
-          <h1 key={index}>{post.slug}</h1>
+          <EachPost key={index} post={post} />
         ))}
       </section>
     </>

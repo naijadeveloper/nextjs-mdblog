@@ -8,7 +8,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
     <>
       <Meta />
       <Header />
-      <main className="p-3">{children}</main>
+      <main className="p-3 mt-8">{children}</main>
     </>
   );
 }
