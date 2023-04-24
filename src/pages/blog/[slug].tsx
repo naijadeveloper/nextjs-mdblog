@@ -5,6 +5,7 @@ import { marked } from "marked";
 import Link from "next/link";
 import type { post } from "@/types/post";
 import type { GetStaticProps, GetStaticPropsContext } from "next";
+import { useState } from "react";
 
 type postPageProps = post & {
   content: string;
@@ -47,6 +48,7 @@ export default function PostPage({
   frontmatter: { title, date, author, cover_image },
   content,
 }: postPageProps) {
+  const [count, setCount] = useState<number>(0);
   return (
     <>
       <Link href="/">
@@ -54,6 +56,13 @@ export default function PostPage({
           Go back
         </button>
       </Link>
+
+      <button
+        className="p-2 rounded-md bg-stone-300 text-stone-900 hover:bg-stone-200 ml-4"
+        onClick={() => setCount((prev) => prev + 1)}
+      >
+        {count}
+      </button>
 
       <div className="text-stone-300 mt-5 w-[100%] md:w-[80%] lg:w-[60%] mx-auto">
         <h1 className="text-6xl p-px">{title}</h1>
